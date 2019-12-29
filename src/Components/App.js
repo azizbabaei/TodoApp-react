@@ -17,15 +17,28 @@ class App extends Component {
 				todos: [...prevState.todos, { key: Date.now(), done: false, text }]
 			};
 		});
-    }
-    
-    deleteTodo (key) { 
-        this.setState(prevState =>{
-            return { 
-                todos : prevState.todos.filter( item => item.key !== key )
-            }
-        })
-    }
+	}
+
+	deleteTodo(key) {
+		this.setState(prevState => {
+			return {
+				todos: prevState.todos.filter(item => item.key !== key)
+			};
+		});
+	}
+
+	toggleTodo(key) {
+		let { todos } = this.state;
+
+		let item = todos.find(item => item.key === key);
+		item.done = !item.done;
+
+		let NewTodos = todos.filter(item => item.key !== key);
+
+		this.setState({
+			todos: [...NewTodos, item]
+		});
+	}
 
 	render() {
 		let { todos, statusDone } = this.state;
@@ -78,7 +91,12 @@ class App extends Component {
 									<p>there isn`t any todos</p>
 								) : (
 									filterTodos.map(item => (
-										<Todo key={item.key} item={item}  delete = {this.deleteTodo.bind(this)}/>
+										<Todo
+											key={item.key}
+											item={item}
+											delete={this.deleteTodo.bind(this)}
+											done={this.toggleTodo.bind(this)}
+										/>
 									))
 								)}
 							</div>
